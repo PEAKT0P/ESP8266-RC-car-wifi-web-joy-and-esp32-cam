@@ -6,6 +6,11 @@ Esp8266 rc car web
 
 This project implements a remote-controlled (RC) car using an ESP8266 microcontroller, with a web interface for control and live video streaming from an ESP32-CAM.
 
+## Demo Video
+
+[![ESP8266 RC Car Demo](https://img.youtube.com/vi/ZeWxeWNyQHM/0.jpg)](https://www.youtube.com/watch?v=ZeWxeWNyQHM)
+
+Click on the image above to watch the demo video of the ESP8266 RC Car in action!
 ## Features
 
 - Full 4-wheel drive control
@@ -67,6 +72,10 @@ Special thanks to my daughter Nicole for inspiring this project!
 ![Интерфейс управления RC машинкой](screenshot.jpg)
 
 Этот проект реализует радиоуправляемую машинку с использованием микроконтроллера ESP8266, веб-интерфейсом для управления и потоковой передачей видео с ESP32-CAM.
+
+## Демонстрационное видео
+
+[![Демо ESP8266 RC машинки](https://img.youtube.com/vi/ZeWxeWNyQHM/0.jpg)](https://www.youtube.com/watch?v=ZeWxeWNyQHM)
 
 ## Особенности
 
