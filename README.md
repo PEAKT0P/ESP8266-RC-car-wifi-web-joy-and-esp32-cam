@@ -2,7 +2,7 @@
 Esp8266 rc car web 
 # ESP8266 RC Car with Web Interface and Camera Control
 
-![RC Car Interface](screenshot_.vivaldi.browser.jpg)
+![RC Car Interface](screenshot.jpg)
 
 This project implements a remote-controlled (RC) car using an ESP8266 microcontroller, with a web interface for control and live video streaming from an ESP32-CAM.
 
@@ -64,7 +64,7 @@ Special thanks to my daughter Nicole for inspiring this project!
 
 # Радиоуправляемая машинка на ESP8266 с веб-интерфейсом и управлением камерой
 
-![Интерфейс управления RC машинкой](https://your-image-url-here.com/rc-car-interface.jpg)
+![Интерфейс управления RC машинкой](screenshot.jpg)
 
 Этот проект реализует радиоуправляемую машинку с использованием микроконтроллера ESP8266, веб-интерфейсом для управления и потоковой передачей видео с ESP32-CAM.
 
