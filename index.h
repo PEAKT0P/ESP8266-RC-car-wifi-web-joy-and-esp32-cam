@@ -101,7 +101,7 @@ const char *HTML_CONTENT = R"=====(
         }
         .footer {
             text-align: center;
-            font-size: 12px;
+            font-size: 10px;
             padding: 10px;
             background-color: #1a1a1a;
             border-top: 1px solid #00ff00;
@@ -111,8 +111,8 @@ const char *HTML_CONTENT = R"=====(
     padding: 3px 10px;
     font-size: 14px;
     background-color: #1a1a1a;
-    color: #00ff00;
-    border: 1px solid #00ff00;
+    color: #00b6ff;
+    border: 1px solid #2400ff;
     border-radius: 3px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -131,8 +131,8 @@ const char *HTML_CONTENT = R"=====(
     padding: 5px 10px;
     font-size: 16px;
     background-color: #1a1a1a;
-    color: #00ffff;
-    border: 1px solid #00ffff;
+    color: #00ad0f;
+    border: 1px solid #00ff00;
     border-radius: 3px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -142,7 +142,7 @@ const char *HTML_CONTENT = R"=====(
 }
 
 .servo-button:hover {
-    background-color: #00ffff;
+    background-color: #005c81;
     color: #000000;
 }
 
@@ -180,12 +180,12 @@ input[type="range"]::-moz-range-thumb {
 
 /* Специфичные стили для LED слайдера */
 #led-slider {
-    border-color: #ff00ff;
-    box-shadow: 0 0 5px #ff00ff;
+    border-color: #ffe400;
+    box-shadow: 0 0 5px #00ffac;
 }
 
 #led-slider::-webkit-slider-thumb {
-    background: #ff00ff;
+    background: #024f4f;
     box-shadow: 0 0 10px #ff00ff;
 }
 
@@ -340,7 +340,8 @@ input[type="range"]::-moz-range-thumb {
     <div class="footer">
         © 2024 Denjik AI. All rights reserved.
         <a href="/about.html" style="color: #00ff00;">About</a>
-        <a href="/play.html" style="color: #556546;">Old</a>
+        <!--<a href="/play.html" style="color: #556546;">Old</a>-->
+		<a href="/system.html" style="color: #556546">System</a>
     </div>
 
 <script>
@@ -454,6 +455,7 @@ input[type="range"]::-moz-range-thumb {
     window.onload = init;
     </script>
     <script>
+	/*
     document.addEventListener('DOMContentLoaded', function (event) {
         const qualitySlider = document.getElementById('quality');
         if (qualitySlider) {
@@ -490,7 +492,31 @@ document.addEventListener('touchmove', (e) => {
 document.addEventListener('touchend', () => {
     isDragging = false;
 });
-	
+*/
+//antitouch
+    (function() {
+    // Запрет выделения текста
+    document.body.style.webkitUserSelect = 'none';
+    document.body.style.userSelect = 'none';
+
+    // Запрет контекстного меню
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    }, false);
+
+    // Запрет touch контекстного меню (для мобильных устройств)
+    document.addEventListener('touchstart', function(e) {
+        if (e.touches.length > 1) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+
+    // Запрет zoom через жесты (для мобильных устройств)
+    document.addEventListener('gesturestart', function(e) {
+        e.preventDefault();
+    }, false);
+})();
+
 </script>
 
 </body>
