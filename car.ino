@@ -6,8 +6,9 @@
 #include <Adafruit_SSD1306.h>
 #include <Servo.h>
 #include "index.h"
-#include "play.h"
+//#include "play.h"
 #include "about.h"
+#include "systemstat.h"
 
 #define CMD_STOP 0
 #define CMD_FORWARD 1
@@ -109,14 +110,19 @@ void setup() {
     server.send(200, "text/html", HTML_CONTENT);
   });
   // Serve the play.html page
-server.on("/play.html", HTTP_GET, []() {
-  Serial.println("Web Server: received a web page request for /play.html");
-  server.send(200, "text/html", PLAY_HTML_CONTENT);
-});
+//server.on("/play.html", HTTP_GET, []() {
+//  Serial.println("Web Server: received a web page request for /play.html");
+//  server.send(200, "text/html", PLAY_HTML_CONTENT);
+//});
   // Serve the about.html page
 server.on("/about.html", HTTP_GET, []() {
   Serial.println("Web Server: received a web page request for /play.html");
   server.send(200, "text/html", ABOUT_HTML_CONTENT);
+});
+  // Serve the about.html page
+server.on("/system.html", HTTP_GET, []() {
+  Serial.println("Web Server: received a web page request for /play.html");
+  server.send(200, "text/html", SYSTEMSTAT_HTML_CONTENT);
 });
 
   server.begin();
@@ -188,7 +194,7 @@ void updateDisplay() {
   if(seconds < 10) display.print("0");
   display.println(seconds);
   
-  display.println("+7 num");
+  display.println("+79998993123");
   display.println("Yana i love u");
   display.println("Nikol i love u");
   display.println("Powered by Denjik");
