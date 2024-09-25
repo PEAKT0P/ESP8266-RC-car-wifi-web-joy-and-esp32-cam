@@ -117,6 +117,7 @@ const char *PLAY_HTML_CONTENT = R"=====(
         .footer {
             margin-top: 20px;
             transition: color 0.3s;
+            font-size: 10px;
         }
         .dark-theme .footer {
             color: #bbb;
@@ -283,16 +284,14 @@ const char *PLAY_HTML_CONTENT = R"=====(
         });
     })();
     </script>
-	
     <div class="control-panel">
         <p>WebSocket: <span id="ws_state">CLOSED</span></p>
         <button id="wc_conn" onclick="wc_onclick();">Connect</button>
     </div>
     <div class="footer">
         <p>© 2024 <span class="highlight">Denjik</span> AI. All rights reserved. <a href="/about.html">About</a></p>
-        &copy; 2024 Denjik AI. All rights reserved. <a style="color: #556546; " href="/play.html">Play2</a>
+        &copy; 2024 Denjik AI. All rights reserved. <a style="color: #556546; " href="/">JOY</a><a style="color: #556546; " href="/system.html">System</a>
     </div>
-
     <script>
     var CMD_STOP = 0, CMD_FORWARD = 1, CMD_BACKWARD = 2, CMD_LEFT = 4, CMD_RIGHT = 8, CMD_LED1 = 16, CMD_LED2 = 32, CMD_SERVO_MOVE = 64, CMD_SERVO_LEFT = 128, CMD_SERVO_RIGHT = 256;
     var ws = null;
