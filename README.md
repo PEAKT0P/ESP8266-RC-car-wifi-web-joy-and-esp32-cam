@@ -64,6 +64,7 @@ Contributions to improve the project are welcome. Please feel free to fork the r
 ## Acknowledgments
 
 Special thanks to my daughter Nicole for inspiring this project!
+Taken as a basis: https://newbiely.com/tutorials/esp8266/esp8266-controls-car-via-web
 
 ---
 
@@ -130,3 +131,4 @@ Special thanks to my daughter Nicole for inspiring this project!
 ## Благодарности
 
 Особая благодарность моей дочери Николь за вдохновение для этого проекта!
+Взято за основу: https://newbiely.com/tutorials/esp8266/esp8266-controls-car-via-web
