@@ -194,7 +194,7 @@ void updateDisplay() {
   if(seconds < 10) display.print("0");
   display.println(seconds);
   
-  display.println("+79998993123");
+  display.println("+00000000000");
   display.println("Yana i love u");
   display.println("Nikol i love u");
   display.println("Powered by Denjik");
