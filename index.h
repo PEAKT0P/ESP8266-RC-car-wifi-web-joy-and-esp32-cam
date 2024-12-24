@@ -17,17 +17,95 @@ const char *HTML_CONTENT = R"=====(
             height: 100vh;
             width: 388px;
         }
-        #stream-container {
-            width: 100%;
-            height: 300px;
-            overflow: hidden;
-            position: relative;
-        }
-        #stream {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+  #stream-container {
+    width: 388px;
+    height: 300px;
+    position: relative;
+    overflow: hidden;
+  }
+  #stream {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .neon-text {
+    position: absolute;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    text-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 15px currentColor;
+  }
+  .top-left {
+    top: 10px;
+    left: 10px;
+    color: #0ff;
+    font-size: 11px;
+  }
+  .bottom-left {
+    bottom: 10px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+  }
+  .rec-text {
+    color: #f0f;
+    font-size: 14px;
+    margin-right: 5px;
+  }
+  .rec-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #0f0;
+    box-shadow: 0 0 5px #0f0, 0 0 10px #0f0;
+    animation: blink 1s infinite;
+  }
+  .bottom-right {
+    bottom: 10px;
+    right: 10px;
+    color: #00f;
+    font-size: 10px;
+  }
+  .crosshair {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+  }
+  .crosshair::before,
+  .crosshair::after {
+    content: '';
+    position: absolute;
+    background-color: #0f0;
+    box-shadow: 0 0 5px #0f0, 0 0 10px #0f0;
+  }
+  .crosshair::before {
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 0.5px;
+    transform: translateY(-50%);
+  }
+  .crosshair::after {
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 0.5px;
+    transform: translateX(-50%);
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
         #container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -106,7 +184,6 @@ const char *HTML_CONTENT = R"=====(
             background-color: #1a1a1a;
             border-top: 1px solid #00ff00;
         }
-		/* Стили для LED кнопок */
 .led-button {
     padding: 3px 10px;
     font-size: 14px;
@@ -263,9 +340,18 @@ input[type="range"]::-moz-range-thumb {
     </style>
 </head>
 <body>
-    <div id="stream-container">
-        <img src="http://192.168.3.100:81/stream" id="stream" crossorigin="">
+<div id="stream-container">
+  <img src="http://192.168.3.100:81/stream" id="stream" crossorigin="">
+  <div class="overlay">
+    <div class="neon-text top-left">RC Car</div>
+    <div class="neon-text bottom-left">
+      <span class="rec-text">REC</span>
+      <div class="rec-indicator"></div>
     </div>
+    <div class="neon-text bottom-right">CONNECT</div>
+    <div class="crosshair"></div>
+  </div>
+</div>
 
     <div id="container">
         <div id="up" class="button">^</div>
@@ -463,15 +549,10 @@ input[type="range"]::-moz-range-thumb {
             qualitySlider.dispatchEvent(new Event('change')); // Триггерим событие изменения для применения
         }
     });
-	
-	
 	// stream
-	
-	const streamContainer = document.getElementById('stream-container');
-
+const streamContainer = document.getElementById('stream-container');
 let isDragging = false;
 let startX, startY, initialX, initialY;
-
 streamContainer.addEventListener('touchstart', (e) => {
     isDragging = true;
     startX = e.touches[0].clientX;
@@ -479,7 +560,6 @@ streamContainer.addEventListener('touchstart', (e) => {
     initialX = streamContainer.offsetLeft;
     initialY = streamContainer.offsetTop;
 });
-
 document.addEventListener('touchmove', (e) => {
     if (isDragging) {
         const dx = e.touches[0].clientX - startX;
@@ -488,7 +568,6 @@ document.addEventListener('touchmove', (e) => {
         streamContainer.style.top = `${initialY + dy}px`;
     }
 });
-
 document.addEventListener('touchend', () => {
     isDragging = false;
 });
@@ -516,9 +595,7 @@ document.addEventListener('touchend', () => {
         e.preventDefault();
     }, false);
 })();
-
 </script>
-
 </body>
 </html>
 )=====";
