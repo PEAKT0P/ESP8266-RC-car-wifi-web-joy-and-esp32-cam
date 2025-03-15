@@ -289,7 +289,7 @@ const char *PLAY_HTML_CONTENT = R"=====(
         <button id="wc_conn" onclick="wc_onclick();">Connect</button>
     </div>
     <div class="footer">
-        <p>© 2024 <span class="highlight">Denjik</span> AI. All rights reserved. <a href="/about.html">About</a></p>
+        <p>© 2025 <span class="highlight">Denjik</span> AI. All rights reserved. <a href="/about.html">About</a></p>
         &copy; 2024 Denjik AI. All rights reserved. <a style="color: #556546; " href="/">JOY</a><a style="color: #556546; " href="/system.html">System</a>
     </div>
     <script>
