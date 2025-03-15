@@ -126,7 +126,16 @@ void setup() {
     Serial.println("Web Server: received a web page request");
     server.send(200, "text/html", HTML_CONTENT);
   });
-
+  // Serve the about.html page
+  server.on("/about.html", HTTP_GET, []() {
+   Serial.println("Web Server: received a web page request for /play.html");
+   server.send(200, "text/html", ABOUT_HTML_CONTENT);
+  });
+   // Serve the about.html page
+  server.on("/system.html", HTTP_GET, []() {
+   Serial.println("Web Server: received a web page request for /play.html");
+   server.send(200, "text/html", SYSTEMSTAT_HTML_CONTENT);
+  });
   server.begin();
   Serial.print("ESP8266 Web Server's IP address: ");
   Serial.println(WiFi.softAPIP());
