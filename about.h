@@ -81,7 +81,7 @@ const char *ABOUT_HTML_CONTENT = R"=====(
     </section>
 
     <footer>
-        <p>© 2024 <span class="highlight">Denjik</span> AI. All rights reserved. <a href="/">JOY</a></p>
+        <p>© 2025 <span class="highlight">Denjik</span> AI. All rights reserved. <a href="/">JOY</a></p>
     </footer>
 </body>
 </html>
