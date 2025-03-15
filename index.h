@@ -536,7 +536,7 @@ button, input[type="range"] {
     </div>
 
     <div class="footer">
-        © 2024 Denjik AI. All rights reserved.
+        © 2025 Denjik AI. All rights reserved.
         <a href="/about.html" style="color: #00ff00;">About</a>
         <!--<a href="/play.html" style="color: #556546;">Old</a>-->
 		<a href="/system.html" style="color: #556546">System</a>
