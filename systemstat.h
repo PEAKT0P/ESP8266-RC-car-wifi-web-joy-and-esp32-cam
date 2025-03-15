@@ -214,7 +214,7 @@ const char *SYSTEMSTAT_HTML_CONTENT = R"=====(
 
 <footer>
 <footer style="position: fixed;bottom: 0;width: 100%;">
-    <p>2024 Denjik AI. All rights reserved.</p><a href="/">JOY</a>
+    <p>2025 Denjik AI. All rights reserved.</p><a href="/">JOY</a>
 </footer>
     
 </footer>
