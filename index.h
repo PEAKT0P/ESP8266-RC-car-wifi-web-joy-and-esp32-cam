@@ -337,6 +337,117 @@ input[type="range"]::-moz-range-thumb {
 #wc_conn {
     animation: pulse 2s infinite;
 }
+/* ADD TO THE STYLE SECTION: */
+#joystick-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 200px;
+    margin: 20px 0;
+}
+
+#joystick-base {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    background-color: #1a1a1a;
+    border: 2px solid #00ff00;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #00ff00;
+}
+
+#joystick-thumb {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    background-color: #333;
+    border: 2px solid #00ff00;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    box-shadow: inset 0 0 10px #00ff00, 0 0 15px #00ff00;
+}
+/* In index.h, add these styles to the <style> section */
+
+/* Mobile optimization for vertical screens */
+@media screen and (max-width: 480px) {
+    body {
+        width: 100%;
+        max-width: 393px;
+        margin: 0 auto;
+        padding: 0;
+        font-size: 14px;
+    }
+    
+    #stream-container {
+        width: 100%;
+        height: 250px; /* Smaller height on mobile */
+    }
+    
+    #joystick-container {
+        height: 170px; /* Smaller joystick area */
+        margin: 10px 0;
+    }
+    
+    #joystick-base {
+        width: 160px;
+        height: 160px;
+    }
+    
+    #joystick-thumb {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .control-panel {
+        padding: 5px;
+        margin: 5px;
+    }
+    
+    .button {
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    .servo-button, .led-button {
+        padding: 3px 8px;
+        font-size: 12px;
+        margin: 3px;
+    }
+    
+    input[type="range"] {
+        width: 150px;
+    }
+    
+    .button-container {
+        flex-wrap: wrap;
+    }
+    
+    .button-container button {
+        margin: 3px;
+        padding: 3px 6px;
+        font-size: 10px;
+    }
+    
+    .footer {
+        padding: 5px;
+        font-size: 9px;
+    }
+}
+
+/* Fix joystick touch behavior for better response */
+#joystick-base {
+    touch-action: none;
+}
+
+/* Make controls more finger-friendly */
+button, input[type="range"] {
+    touch-action: manipulation;
+}
+
     </style>
 </head>
 <body>
@@ -353,12 +464,13 @@ input[type="range"]::-moz-range-thumb {
   </div>
 </div>
 
-    <div id="container">
-        <div id="up" class="button">^</div>
-        <div id="left" class="button"><</div>
-        <!--<div id="stop" class="button">¦</div>-->
-        <div id="right" class="button">></div>
-        <div id="down" class="button">v</div>
+   <!-- WITH THIS NEW JOYSTICK CONTAINER: -->
+    <div class="control-panel">
+        <div id="joystick-container">
+            <div id="joystick-base">
+                <div id="joystick-thumb"></div>
+            </div>
+        </div>
     </div>
 
     <div class="control-panel">
@@ -435,61 +547,159 @@ input[type="range"]::-moz-range-thumb {
     var ws = null;
     var led1_state = true, led2_state = true;
 
-    var pingInterval;
+    pingInterval = setInterval(sendPing, 3000); // Reduce ping frequency to every 3 seconds
 
-    function init() {
-        document.querySelectorAll('.button').forEach(btn => {
-            btn.addEventListener('touchstart', buttonPress);
-            btn.addEventListener('touchend', buttonRelease);
-            btn.addEventListener('mousedown', buttonPress);
-            btn.addEventListener('mouseup', buttonRelease);
-            btn.addEventListener('mouseleave', buttonRelease);
-        });
+    // WITH THIS NEW JOYSTICK CODE:
+// In index.h, replace the existing joystick handling code with:
+var CMD_FORWARD_LEFT = 512, CMD_FORWARD_RIGHT = 1024, CMD_BACKWARD_LEFT = 2048, CMD_BACKWARD_RIGHT = 4096;
+
+function init() {
+    const joystickThumb = document.getElementById('joystick-thumb');
+    const joystickBase = document.getElementById('joystick-base');
+    
+    let isDragging = false;
+    let currentCommand = CMD_STOP;
+    let lastCommandSent = 0;
+    const commandThrottleMs = 50; // Send commands every 50ms at most
+    
+    // Get joystick dimensions and position
+    const baseRect = joystickBase.getBoundingClientRect();
+    const maxDistance = baseRect.width / 2 - joystickThumb.offsetWidth / 2;
+    
+    function getJoystickCenter() {
+        // Recalculate center each time to handle potential layout shifts
+        const rect = joystickBase.getBoundingClientRect();
+        return {
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2
+        };
     }
-
-    function buttonPress(event) {
-        event.preventDefault();
-        let command;
-        switch(event.target.id) {
-            case 'up': command = CMD_FORWARD; break;
-            case 'down': command = CMD_BACKWARD; break;
-            case 'left': command = CMD_LEFT; break;
-            case 'right': command = CMD_RIGHT; break;
-            case 'stop': command = CMD_STOP; break;
+    
+    function handleJoystickMove(clientX, clientY) {
+        if (!isDragging) return;
+        
+        const center = getJoystickCenter();
+        
+        // Calculate distance from center
+        let deltaX = clientX - center.x;
+        let deltaY = clientY - center.y;
+        
+        // Calculate distance from center
+        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        
+        // Normalize if distance is greater than max
+        if (distance > maxDistance) {
+            deltaX = deltaX * maxDistance / distance;
+            deltaY = deltaY * maxDistance / distance;
         }
-        send_command(command);
-        event.target.style.opacity = '0.7';
+        
+        // Update joystick thumb position
+        joystickThumb.style.transform = `translate(calc(-50% + ${deltaX}px), calc(-50% + ${deltaY}px))`;
+        
+        // Deadzone handling
+        const deadzone = 15; // Dead zone radius in pixels
+        
+        const now = Date.now();
+        if (now - lastCommandSent < commandThrottleMs) {
+            return; // Throttle command rate
+        }
+        
+        // Only send commands if outside the dead zone
+        if (distance > deadzone) {
+            // Calculate X and Y components for direction
+            const normX = deltaX / maxDistance; // -1 to 1
+            const normY = deltaY / maxDistance; // -1 to 1
+            
+            // Determine command based on normalized X and Y
+            let newCommand = CMD_STOP;
+            
+            // Determine forward/backward component
+            if (normY < -0.25) {
+                newCommand = CMD_FORWARD;
+            } else if (normY > 0.25) {
+                newCommand = CMD_BACKWARD;
+            }
+            
+            // Add turning component
+            if (normX < -0.25) {
+                if (newCommand === CMD_FORWARD) {
+                    newCommand = CMD_FORWARD_LEFT;
+                } else if (newCommand === CMD_BACKWARD) {
+                    newCommand = CMD_BACKWARD_LEFT;
+                } else {
+                    newCommand = CMD_LEFT;
+                }
+            } else if (normX > 0.3) {
+                if (newCommand === CMD_FORWARD) {
+                    newCommand = CMD_FORWARD_RIGHT;
+                } else if (newCommand === CMD_BACKWARD) {
+                    newCommand = CMD_BACKWARD_RIGHT;
+                } else {
+                    newCommand = CMD_RIGHT;
+                }
+            }
+            
+            // Only send if command changed
+            if (newCommand !== currentCommand) {
+                send_command(newCommand);
+                currentCommand = newCommand;
+                lastCommandSent = now;
+            }
+        } else if (currentCommand !== CMD_STOP) {
+            send_command(CMD_STOP);
+            currentCommand = CMD_STOP;
+            lastCommandSent = now;
+        }
     }
+    
+    // Touch events for mobile (prioritize these for mobile-first approach)
+    joystickBase.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        e.preventDefault();
+        const touch = e.touches[0];
+        handleJoystickMove(touch.clientX, touch.clientY);
+    }, { passive: false });
 
-    function buttonRelease(event) {
-        event.preventDefault();
+    document.addEventListener('touchmove', (e) => {
+        if (isDragging) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            handleJoystickMove(touch.clientX, touch.clientY);
+        }
+    }, { passive: false });
+
+    document.addEventListener('touchend', () => {
+        isDragging = false;
+        joystickThumb.style.transform = 'translate(-50%, -50%)';
         send_command(CMD_STOP);
-        event.target.style.opacity = '1';
+        currentCommand = CMD_STOP;
+    });
+    
+    // Mouse events as fallback
+    joystickBase.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        handleJoystickMove(e.clientX, e.clientY);
+    });
+    
+    document.addEventListener('mousemove', (e) => {
+        handleJoystickMove(e.clientX, e.clientY);
+    });
+    
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+        joystickThumb.style.transform = 'translate(-50%, -50%)';
+        send_command(CMD_STOP);
+        currentCommand = CMD_STOP;
+    });
+    
+    // Initialize websocket connection automatically
+    if (ws == null) {
+        ws = new WebSocket("ws://" + window.location.host + ":81");
+        document.getElementById("ws_state").innerHTML = "CONNECTING";
+        ws.onopen = ws_onopen;
+        ws.onclose = ws_onclose;
     }
-
-    function ws_onopen() {
-        document.getElementById("ws_state").innerHTML = "OPEN";
-        document.getElementById("wc_conn").innerHTML = "Disconnect";
-        pingInterval = setInterval(sendPing, 2000);
-    }
-
-    function ws_onclose() {
-        document.getElementById("ws_state").innerHTML = "CLOSED";
-        document.getElementById("wc_conn").innerHTML = "Connect";
-        ws = null;
-        clearInterval(pingInterval);
-    }
-
-    function wc_onclick() {
-        if(ws == null) {
-            ws = new WebSocket("ws://" + window.location.host + ":81");
-            document.getElementById("ws_state").innerHTML = "CONNECTING";
-            ws.onopen = ws_onopen;
-            ws.onclose = ws_onclose;
-        } else {
-            ws.close();
-        }
-    }
+}
     function sendPing() {
         if(ws != null && ws.readyState == 1) {
             ws.send("PING");
